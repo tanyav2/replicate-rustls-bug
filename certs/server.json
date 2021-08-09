@@ -1,0 +1,17 @@
+{
+    "key": {
+      "algo": "ecdsa",
+      "size": 256
+    },
+    "CN": "(dev use only)",
+      "hosts": ["localhost"],
+    "names": [
+      {
+        "C": "Russia",
+        "L": "Tobolsk Governorate",
+        "ST": "Russian Empire",
+        "O": "Uranium Inc",
+        "OU": "Periodic Table Server"
+      }
+    ]
+  }

@@ -1,0 +1,5 @@
+addr: 127.0.0.1:7847
+ca_cert: data/ca.pem
+client_cert: data/client-cert.pem
+client_key: data/client-key.pem
+connect: 127.0.0.1:9443
