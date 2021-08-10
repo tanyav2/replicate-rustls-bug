@@ -1,5 +1,6 @@
 use log::*;
 use serde::Deserialize;
+use std::convert::TryFrom;
 use std::fs;
 use std::io::{self, BufReader};
 use std::sync::Arc;
@@ -62,21 +63,22 @@ async fn main() -> io::Result<()> {
     let args: Vec<String> = std::env::args().collect();
     let conf = load_conf(&args[1]).unwrap();
 
-    let mut tls_client_config = rustls::ClientConfig::new();
-    tls_client_config
-        .set_single_client_cert(
+    let tls_client_config = rustls::ClientConfig::builder()
+        .with_safe_defaults()
+        .with_root_certificates(load_cert_store(&conf.ca_cert), &[]);
+    let config = tls_client_config
+        .with_single_cert(
             load_certs(&conf.client_cert),
             load_private_key(&conf.client_key),
         )
         .expect("failed to configure client certificate");
-    tls_client_config.root_store = load_cert_store(&conf.ca_cert);
-    let tls_client = tokio_rustls::TlsConnector::from(Arc::new(tls_client_config));
+    let tls_client = tokio_rustls::TlsConnector::from(Arc::new(config));
     debug!("Starting client on {}", &conf.addr);
 
     loop {
         let tls_client = tls_client.clone();
         let stream = TcpStream::connect(&conf.connect).await?;
-        let domain = webpki::DNSNameRef::try_from_ascii_str("localhost").unwrap();
+        let domain = rustls::ServerName::try_from("localhost").unwrap();
         let mut stream = tls_client.connect(domain, stream).await.map_err(|e| {
             error!("failed to execute request with err: {:?}", e);
             e
