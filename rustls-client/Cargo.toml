@@ -13,5 +13,5 @@ rustls-pemfile = "0.2.1"
 serde = { version = "1.0", features = [ "derive" ] }
 serde_yaml = "0.8"
 tokio = { version = "1.9", features = [ "full" ] }
-tokio-rustls = { version = "0.22" }
+tokio-rustls = { path = "../tls/tokio-rustls" }
 webpki = "0.21"

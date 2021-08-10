@@ -14,3 +14,8 @@ This example replicates the session resumption bug in `rustls` which occurs when
 [2021-08-03T23:05:34Z ERROR rustls_client] failed to execute request with err: Custom { kind: InvalidData, error: PeerMisbehavedError("abbreviated handshake offered, but with varied cs") }
 ```
 after `rustls-client` attempts to send a message.
+
+You will have to add the branch of `rustls` in the `Cargo.toml` of the `tokio-tls` submodule in order to get things to build: https://github.com/djc/tls/blob/963a0ad7ab9a456d8db25fa50f98ee87cfca63eb/tokio-rustls/Cargo.toml#L16.
+```toml
+rustls = { git = "https://github.com/ctz/rustls", branch = "main" }
+```
